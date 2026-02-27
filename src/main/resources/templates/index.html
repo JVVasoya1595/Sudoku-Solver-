@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUDOKU.exe // SOLVER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="glitch-title">SUDOKU<span class="highlight">_SOLVER</span></h1>
+        <p class="subtitle">[ SYSTEM READY: ENTER PARAMETERS ]</p>
+
+        <div class="mode-switcher">
+            <button id="modeSolveBtn" class="btn btn-primary active">SOLVER_MODE</button>
+            <button id="modeGameBtn" class="btn btn-outline">GAME_MODE</button>
+        </div>
+
+        <div id="gameStats" class="game-stats hidden">
+            <div class="stat-box">LIVES: <span id="lifelinesDisplay" class="lives-text">❤❤❤</span></div>
+            <div class="stat-box">HINTS: <span id="hintsDisplay" class="hints-text">3</span></div>
+        </div>
+
+        <div class="board-container">
+            <table id="sudokuBoard" class="sudoku-board">
+                <tbody>
+                    <tr>
+                        <td><input type="number" min="0" max="9" data-row="0" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="0" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="0" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="0" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="0" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="0" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="0" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="0" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="0" data-col="8"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" min="0" max="9" data-row="1" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="1" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="1" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="1" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="1" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="1" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="1" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="1" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="1" data-col="8"></td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td><input type="number" min="0" max="9" data-row="2" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="2" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="2" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="2" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="2" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="2" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="2" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="2" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="2" data-col="8"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" min="0" max="9" data-row="3" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="3" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="3" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="3" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="3" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="3" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="3" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="3" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="3" data-col="8"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" min="0" max="9" data-row="4" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="4" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="4" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="4" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="4" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="4" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="4" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="4" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="4" data-col="8"></td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td><input type="number" min="0" max="9" data-row="5" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="5" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="5" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="5" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="5" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="5" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="5" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="5" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="5" data-col="8"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" min="0" max="9" data-row="6" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="6" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="6" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="6" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="6" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="6" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="6" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="6" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="6" data-col="8"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" min="0" max="9" data-row="7" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="7" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="7" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="7" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="7" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="7" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="7" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="7" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="7" data-col="8"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" min="0" max="9" data-row="8" data-col="0"></td>
+                        <td><input type="number" min="0" max="9" data-row="8" data-col="1"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="8" data-col="2"></td>
+                        <td><input type="number" min="0" max="9" data-row="8" data-col="3"></td>
+                        <td><input type="number" min="0" max="9" data-row="8" data-col="4"></td>
+                        <td class="border-right"><input type="number" min="0" max="9" data-row="8" data-col="5"></td>
+                        <td><input type="number" min="0" max="9" data-row="8" data-col="6"></td>
+                        <td><input type="number" min="0" max="9" data-row="8" data-col="7"></td>
+                        <td><input type="number" min="0" max="9" data-row="8" data-col="8"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="solverModeControls" class="button-group">
+            <button id="solveBtn" class="btn btn-primary">EXECUTE_SOLVER</button>
+            <button id="validateBtn" class="btn btn-info">SCAN_VALIDITY</button>
+            <button id="resetBtn" class="btn btn-secondary">REBOOT_PUZZLE</button>
+            <button id="clearBtn" class="btn btn-warning">PURGE_DATA</button>
+        </div>
+
+        <div id="gameModeControls" class="button-group hidden">
+            <select id="difficultySelect" class="btn btn-outline" style="appearance: none; text-align: center;">
+                <option value="easy">EASY (30 BLANK)</option>
+                <option value="medium" selected>MEDIUM (40 BLANK)</option>
+                <option value="hard">HARD (50 BLANK)</option>
+                <option value="expert">EXPERT (60 BLANK)</option>
+            </select>
+            <button id="startGameBtn" class="btn btn-primary">INIT_GAME</button>
+            <button id="hintBtn" class="btn btn-info">USE_HINT</button>
+            <button id="giveUpBtn" class="btn btn-warning">GIVE_UP</button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div id="solverMatrixInput" class="matrix-input-section">
+            <h3>>> DIRECT_MATRIX_INPUT</h3>
+            <textarea id="matrixInput" rows="5" placeholder="Paste standard 9x9 matrix data here...
+Example format:
+7 0 2 0 5 0 6 0 0
+0 0 0 0 0 3 0 0 0"></textarea>
+            <button id="loadMatrixBtn" class="btn btn-matrix">LOAD_MATRIX_DATA</button>
+        </div>
+
+        <div class="info-section">
+            <h3>>> MISSION_BRIEFING:</h3>
+            <ul id="solverInstructions">
+                <li>Input sequential numeric coordinates (1-9); leave unknown sectors blank.</li>
+                <li>Batch data injection supported via DIRECT_MATRIX_INPUT channel.</li>
+                <li>Engage EXECUTE_SOLVER to initialize the backtracking algorithm.</li>
+                <li>Engage REBOOT_PUZZLE to restore original sector states.</li>
+                <li>Engage PURGE_DATA to wipe the entire grid.</li>
+                <li>Engage SCAN_VALIDITY to run integrity checks on grid data.</li>
+            </ul>
+            <ul id="gameInstructions" class="hidden">
+                <li>Select difficulty and engage INIT_GAME to generate a puzzle.</li>
+                <li>Input numbers manually to solve. Errors will deduct from LIVES.</li>
+                <li>You have 3 HINTS max. Use them wisely if data is unclear.</li>
+                <li>Survive until the grid is filled to complete the data simulation.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+
+</html>

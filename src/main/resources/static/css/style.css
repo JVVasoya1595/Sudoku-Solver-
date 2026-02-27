@@ -1,0 +1,409 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #0b0f19;
+    background-image:
+        linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #0ff;
+}
+
+.container {
+    background: rgba(11, 15, 25, 0.9);
+    border: 1px solid #0ff;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 40px;
+    max-width: 650px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #0ff;
+    box-shadow: 0 0 10px #0ff;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1.glitch-title {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    margin-bottom: 5px;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+}
+
+h1 .highlight {
+    color: #0ff;
+}
+
+.subtitle {
+    text-align: center;
+    color: #0ff;
+    font-family: 'Orbitron', monospace;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.mode-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    padding-bottom: 15px;
+}
+
+.mode-switcher .btn.active {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), inset 0 0 10px rgba(0, 255, 255, 0.3);
+    text-shadow: 0 0 5px #0ff;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    background: rgba(0, 20, 30, 0.8);
+    border: 1px solid #0ff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+.lives-text {
+    color: #f0f;
+    text-shadow: 0 0 5px #f0f;
+    letter-spacing: 2px;
+}
+
+.hints-text {
+    color: #ff0;
+    text-shadow: 0 0 5px #ff0;
+}
+
+.board-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.sudoku-board {
+    border-collapse: collapse;
+    background: rgba(0, 20, 30, 0.8);
+    border: 2px solid #0ff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.sudoku-board td {
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    padding: 0;
+    width: 50px;
+    height: 50px;
+}
+
+.sudoku-board td.border-right {
+    border-right: 2px solid #0ff;
+}
+
+.sudoku-board tr.border-bottom td {
+    border-bottom: 2px solid #0ff;
+}
+
+.sudoku-board input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    text-align: center;
+    font-size: 1.6em;
+    font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
+    padding: 0;
+    background: transparent;
+    color: #fff;
+    text-shadow: 0 0 5px #0ff;
+    transition: all 0.2s;
+}
+
+.sudoku-board input:focus {
+    outline: none;
+    background-color: rgba(0, 255, 255, 0.2);
+    box-shadow: inset 0 0 10px #0ff;
+}
+
+.sudoku-board input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.sudoku-board input.readonly-cell {
+    color: #0ff;
+    text-shadow: 0 0 5px #0ff;
+    background: rgba(0, 255, 255, 0.05);
+}
+
+.sudoku-board input.correct {
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+}
+
+.sudoku-board input.wrong {
+    color: #f00 !important;
+    text-shadow: 0 0 5px #f00 !important;
+    background-color: rgba(255, 0, 0, 0.1) !important;
+}
+
+/* Spinner removal */
+.sudoku-board input::-webkit-outer-spin-button,
+.sudoku-board input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.sudoku-board input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.btn {
+    padding: 12px 20px;
+    background: transparent;
+    border: 1px solid #0ff;
+    color: #0ff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), inset 0 0 10px rgba(0, 255, 255, 0.3);
+    text-shadow: 0 0 5px #0ff;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    border-color: #0f0;
+    color: #0f0;
+}
+
+.btn-primary:hover {
+    background: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5), inset 0 0 10px rgba(0, 255, 0, 0.3);
+    text-shadow: 0 0 5px #0f0;
+}
+
+.btn-info {
+    border-color: #0ff;
+    color: #0ff;
+}
+
+.btn-secondary {
+    border-color: #ff0;
+    color: #ff0;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 0, 0.1);
+    box-shadow: 0 0 15px rgba(255, 255, 0, 0.5), inset 0 0 10px rgba(255, 255, 0, 0.3);
+    text-shadow: 0 0 5px #ff0;
+}
+
+.btn-warning,
+.btn-matrix {
+    border-color: #f0f;
+    color: #f0f;
+}
+
+.btn-warning:hover,
+.btn-matrix:hover {
+    background: rgba(255, 0, 255, 0.1);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5), inset 0 0 10px rgba(255, 0, 255, 0.3);
+    text-shadow: 0 0 5px #f0f;
+}
+
+.btn-outline {
+    border-color: #aaa;
+    color: #aaa;
+}
+
+.btn-outline option {
+    background-color: #0b0f19;
+    color: #0ff;
+}
+
+.matrix-input-section {
+    margin-top: 25px;
+    background: rgba(0, 20, 30, 0.6);
+    padding: 15px;
+    border: 1px dashed #0ff;
+    position: relative;
+}
+
+.matrix-input-section h3 {
+    margin-bottom: 10px;
+    color: #0ff;
+    font-size: 1.1em;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+}
+
+#matrixInput {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    color: #0f0;
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1em;
+    resize: vertical;
+    margin-bottom: 15px;
+}
+
+#matrixInput:focus {
+    outline: none;
+    border-color: #0ff;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+#matrixInput::placeholder {
+    color: rgba(0, 255, 128, 0.3);
+}
+
+.btn-matrix {
+    width: 100%;
+}
+
+.message {
+    padding: 12px;
+    margin: 20px 0;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 1px;
+    display: none;
+    border-left: 4px solid transparent;
+}
+
+.message.success {
+    display: block;
+    background-color: rgba(0, 255, 0, 0.1);
+    color: #0f0;
+    border-color: #0f0;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+}
+
+.message.error {
+    display: block;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #f00;
+    border-color: #f00;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+.message.info {
+    display: block;
+    background-color: rgba(0, 255, 255, 0.1);
+    color: #0ff;
+    border-color: #0ff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+.info-section {
+    margin-top: 35px;
+    padding: 15px;
+    border-top: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.info-section h3 {
+    color: #0ff;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.info-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.info-section li {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    font-size: 0.9em;
+}
+
+.info-section li:before {
+    content: ">";
+    position: absolute;
+    left: 0;
+    color: #0ff;
+    font-family: 'Orbitron', monospace;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1.glitch-title {
+        font-size: 1.8em;
+    }
+
+    .sudoku-board td {
+        width: 40px;
+        height: 40px;
+    }
+
+    .sudoku-board input {
+        font-size: 1.2em;
+    }
+
+    .button-group {
+        grid-template-columns: 1fr;
+    }
+}
