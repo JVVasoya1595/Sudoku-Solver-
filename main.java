@@ -1,4 +1,4 @@
-public class main {
+public class Main {
 
   private static final int GRID_SIZE = 9;
 
