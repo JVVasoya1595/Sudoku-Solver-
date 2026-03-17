@@ -21,6 +21,16 @@ public class Main {
     if (solveBoard(board)) {
       System.out.println("Solved successfully!");
     } else {
+        { 0, 0, 9, 7, 0, 0, 0, 0, 5 },
+        { 0, 0, 0, 2, 0, 0, 0, 0, 0 },
+        { 0, 0, 7, 0, 4, 0, 2, 0, 3 }
+    };
+
+    printBoard(board);
+
+    if (solveBoard(board)) {
+      System.out.println("Solved successfully!");
+    } else {
       System.out.println("Unsolvable board :(");
     }
 
@@ -86,9 +96,8 @@ public class Main {
       for (int column = 0; column < GRID_SIZE; column++) {
         if (board[row][column] == 0) {
           for (int numberToTry = 1; numberToTry <= GRID_SIZE; numberToTry++) {
-            if (isValidPlacement(board, numberToTry, row, column)) {
+              if (isValidPlacement(board, numberToTry, row, column)) {
               board[row][column] = numberToTry;
-
               if (solveBoard(board)) {
                 return true;
               } else {
@@ -102,5 +111,4 @@ public class Main {
     }
     return true;
   }
-
 }

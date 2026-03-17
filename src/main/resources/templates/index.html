@@ -1,31 +1,48 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUDOKU.exe // SOLVER</title>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>Sudoku Solver</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
     <div class="container">
-        <h1 class="glitch-title">SUDOKU<span class="highlight">_SOLVER</span></h1>
-        <p class="subtitle">[ SYSTEM READY: ENTER PARAMETERS ]</p>
+        <div class="topbar">
+            <div class="brand">
+                <h1 class="glitch-title">Sudoku</h1>
+                <p class="subtitle">Solver & Game</p>
+            </div>
+            <div class="topbar-actions">
+                <button id="themeToggleBtn" class="btn theme-toggle" type="button">Theme</button>
+                <div class="user-chip" sec:authorize="isAuthenticated()">
+                    <span class="user-name" th:text="${#authentication.name}">user</span>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button class="btn btn-outline btn-small" type="submit">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="mode-switcher">
-            <button id="modeSolveBtn" class="btn btn-primary active">SOLVER_MODE</button>
-            <button id="modeGameBtn" class="btn btn-outline">GAME_MODE</button>
+            <button id="modeSolveBtn" class="btn btn-primary active">Solver</button>
+            <button id="modeGameBtn" class="btn btn-outline">Game</button>
         </div>
 
         <div id="gameStats" class="game-stats hidden">
-            <div class="stat-box">LIVES: <span id="lifelinesDisplay" class="lives-text">❤❤❤</span></div>
-            <div class="stat-box">HINTS: <span id="hintsDisplay" class="hints-text">3</span></div>
+            <div class="stat-box">Lives: <span id="lifelinesDisplay" class="lives-text">❤❤❤</span></div>
+            <div class="stat-box">Hints: <span id="hintsDisplay" class="hints-text">3</span></div>
+            <div class="stat-box">Time: <span id="timerDisplay" class="timer-text">00:00</span></div>
         </div>
 
         <div class="board-container">
@@ -135,54 +152,68 @@
         </div>
 
         <div id="solverModeControls" class="button-group">
-            <button id="solveBtn" class="btn btn-primary">EXECUTE_SOLVER</button>
-            <button id="validateBtn" class="btn btn-info">SCAN_VALIDITY</button>
-            <button id="resetBtn" class="btn btn-secondary">REBOOT_PUZZLE</button>
-            <button id="clearBtn" class="btn btn-warning">PURGE_DATA</button>
+            <button id="solveBtn" class="btn btn-primary">Solve</button>
+            <button id="validateBtn" class="btn btn-info">Check</button>
+            <button id="resetBtn" class="btn btn-secondary">Reset</button>
+            <button id="clearBtn" class="btn btn-warning">Clear</button>
         </div>
 
         <div id="gameModeControls" class="button-group hidden">
             <select id="difficultySelect" class="btn btn-outline" style="appearance: none; text-align: center;">
-                <option value="easy">EASY (30 BLANK)</option>
-                <option value="medium" selected>MEDIUM (40 BLANK)</option>
-                <option value="hard">HARD (50 BLANK)</option>
-                <option value="expert">EXPERT (60 BLANK)</option>
+                <option value="easy">Easy (30 blanks)</option>
+                <option value="medium" selected>Medium (40 blanks)</option>
+                <option value="hard">Hard (50 blanks)</option>
+                <option value="expert">Expert (60 blanks)</option>
             </select>
-            <button id="startGameBtn" class="btn btn-primary">INIT_GAME</button>
-            <button id="hintBtn" class="btn btn-info">USE_HINT</button>
-            <button id="giveUpBtn" class="btn btn-warning">GIVE_UP</button>
+            <button id="startGameBtn" class="btn btn-primary">New Game</button>
+            <button id="hintBtn" class="btn btn-info">Hint</button>
+            <button id="giveUpBtn" class="btn btn-warning">Give Up</button>
         </div>
 
         <div id="message" class="message"></div>
 
         <div id="solverMatrixInput" class="matrix-input-section">
-            <h3>>> DIRECT_MATRIX_INPUT</h3>
-            <textarea id="matrixInput" rows="5" placeholder="Paste standard 9x9 matrix data here...
-Example format:
+            <h3>Paste a 9×9 grid</h3>
+            <textarea id="matrixInput" rows="5" placeholder="Paste a standard 9x9 matrix here...
+Example:
 7 0 2 0 5 0 6 0 0
 0 0 0 0 0 3 0 0 0"></textarea>
-            <button id="loadMatrixBtn" class="btn btn-matrix">LOAD_MATRIX_DATA</button>
+            <button id="loadMatrixBtn" class="btn btn-matrix">Load Grid</button>
         </div>
 
         <div class="info-section">
-            <h3>>> MISSION_BRIEFING:</h3>
+            <h3>How to use</h3>
             <ul id="solverInstructions">
-                <li>Input sequential numeric coordinates (1-9); leave unknown sectors blank.</li>
-                <li>Batch data injection supported via DIRECT_MATRIX_INPUT channel.</li>
-                <li>Engage EXECUTE_SOLVER to initialize the backtracking algorithm.</li>
-                <li>Engage REBOOT_PUZZLE to restore original sector states.</li>
-                <li>Engage PURGE_DATA to wipe the entire grid.</li>
-                <li>Engage SCAN_VALIDITY to run integrity checks on grid data.</li>
+                <li>Enter digits 1–9. Leave cells empty for unknown values.</li>
+                <li>Use “Load Grid” to paste a full board quickly.</li>
+                <li>Press “Solve” to solve the current puzzle.</li>
+                <li>Press “Check” to validate the current entries.</li>
+                <li>Use “Reset” to restore the default puzzle.</li>
+                <li>Use “Clear” to empty the board.</li>
             </ul>
             <ul id="gameInstructions" class="hidden">
-                <li>Select difficulty and engage INIT_GAME to generate a puzzle.</li>
-                <li>Input numbers manually to solve. Errors will deduct from LIVES.</li>
-                <li>You have 3 HINTS max. Use them wisely if data is unclear.</li>
-                <li>Survive until the grid is filled to complete the data simulation.</li>
+                <li>Select a difficulty and press “New Game” to generate a puzzle.</li>
+                <li>Fill the grid. Wrong entries cost a life.</li>
+                <li>You have up to 3 hints.</li>
+                <li>Finish the puzzle to stop the clock.</li>
             </ul>
         </div>
     </div>
 
+    <div id="modalOverlay" class="modal-overlay hidden" role="presentation">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">Confirm</h2>
+            </div>
+            <p id="modalMessage" class="modal-message">Are you sure?</p>
+            <div class="modal-actions">
+                <button id="modalCancelBtn" class="btn btn-outline" type="button">Cancel</button>
+                <button id="modalConfirmBtn" class="btn btn-warning" type="button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/vendor/gsap.min.js"></script>
     <script src="/js/app.js"></script>
 </body>
 

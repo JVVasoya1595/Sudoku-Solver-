@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up • Sudoku</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container auth-container">
+        <div class="topbar">
+            <div class="brand">
+                <h1 class="glitch-title">Sudoku</h1>
+                <p class="subtitle">Create your account</p>
+            </div>
+        </div>
+
+        <div th:if="${signupError}" class="message error" th:text="${signupError}">Signup error</div>
+
+        <div class="auth-card">
+            <form class="auth-form" th:action="@{/signup}" th:object="${signupForm}" method="post" autocomplete="on">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <label class="auth-label" for="username">Username</label>
+                <input class="auth-input" id="username" th:field="*{username}" type="text" required />
+                <div class="auth-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
+
+                <label class="auth-label" for="password">Password</label>
+                <input class="auth-input" id="password" th:field="*{password}" type="password" required />
+                <div class="auth-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+
+                <label class="auth-label" for="confirmPassword">Confirm password</label>
+                <input class="auth-input" id="confirmPassword" th:field="*{confirmPassword}" type="password" required />
+                <div class="auth-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Confirm error</div>
+
+                <button class="btn btn-primary auth-submit" type="submit">Create account</button>
+            </form>
+        </div>
+
+        <p class="auth-hint">Already have an account? <a class="auth-link" th:href="@{/login}">Sign in</a></p>
+    </div>
+</body>
+
+</html>

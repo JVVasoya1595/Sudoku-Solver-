@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.sudoku.service.SudokuSolverService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/")
 public class SudokuController {
@@ -13,13 +15,9 @@ public class SudokuController {
     @Autowired
     private SudokuSolverService sudokuSolverService;
 
-    private int[][] currentBoard;
-    private int[][] originalBoard;
-
     @GetMapping
-    public String index(Model model) {
-        // Default board
-        currentBoard = new int[][] {
+    public String index(Model model, HttpSession session) {
+        int[][] currentBoard = new int[][] {
                 { 7, 0, 2, 0, 5, 0, 6, 0, 0 },
                 { 0, 0, 0, 0, 0, 3, 0, 0, 0 },
                 { 1, 0, 0, 0, 0, 9, 5, 0, 0 },
@@ -30,7 +28,9 @@ public class SudokuController {
                 { 0, 0, 0, 2, 0, 0, 0, 0, 0 },
                 { 0, 0, 7, 0, 4, 0, 2, 0, 3 }
         };
-        originalBoard = sudokuSolverService.copyBoard(currentBoard);
+        int[][] originalBoard = sudokuSolverService.copyBoard(currentBoard);
+        session.setAttribute("currentBoard", sudokuSolverService.copyBoard(currentBoard));
+        session.setAttribute("originalBoard", sudokuSolverService.copyBoard(originalBoard));
 
         model.addAttribute("board", currentBoard);
         return "index";
@@ -38,11 +38,14 @@ public class SudokuController {
 
     @PostMapping("/solve")
     @ResponseBody
-    public SolveResponse solve(@RequestBody int[][] board) {
-        currentBoard = sudokuSolverService.copyBoard(board);
-        originalBoard = sudokuSolverService.copyBoard(board);
+    public SolveResponse solve(@RequestBody int[][] board, HttpSession session) {
+        int[][] currentBoard = sudokuSolverService.copyBoard(board);
+        int[][] originalBoard = sudokuSolverService.copyBoard(board);
+        session.setAttribute("currentBoard", sudokuSolverService.copyBoard(currentBoard));
+        session.setAttribute("originalBoard", sudokuSolverService.copyBoard(originalBoard));
 
         if (sudokuSolverService.solveBoard(currentBoard)) {
+            session.setAttribute("currentBoard", sudokuSolverService.copyBoard(currentBoard));
             return new SolveResponse(true, "Puzzle solved successfully!", currentBoard);
         } else {
             return new SolveResponse(false, "This puzzle is unsolvable!", currentBoard);
@@ -51,16 +54,21 @@ public class SudokuController {
 
     @PostMapping("/reset")
     @ResponseBody
-    public ResetResponse reset() {
-        currentBoard = sudokuSolverService.copyBoard(originalBoard);
+    public ResetResponse reset(HttpSession session) {
+        int[][] originalBoard = (int[][]) session.getAttribute("originalBoard");
+        if (originalBoard == null) originalBoard = new int[9][9];
+        int[][] currentBoard = sudokuSolverService.copyBoard(originalBoard);
+        session.setAttribute("currentBoard", sudokuSolverService.copyBoard(currentBoard));
         return new ResetResponse(true, "Board reset successfully!", currentBoard);
     }
 
     @PostMapping("/clear")
     @ResponseBody
-    public ResetResponse clear() {
-        currentBoard = new int[9][9];
-        originalBoard = sudokuSolverService.copyBoard(currentBoard);
+    public ResetResponse clear(HttpSession session) {
+        int[][] currentBoard = new int[9][9];
+        int[][] originalBoard = sudokuSolverService.copyBoard(currentBoard);
+        session.setAttribute("currentBoard", sudokuSolverService.copyBoard(currentBoard));
+        session.setAttribute("originalBoard", sudokuSolverService.copyBoard(originalBoard));
         return new ResetResponse(true, "Board cleared successfully!", currentBoard);
     }
 
