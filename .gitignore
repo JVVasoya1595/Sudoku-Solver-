@@ -56,3 +56,12 @@ src/main/generated/
 # Gradle (if using Gradle instead of Maven)
 .gradle
 build/
+
+# H2 Database runtime files
+data/*.mv.db
+data/*.trace.db
+
+# Runtime logs
+*.log
+run-*.log
+server*.log

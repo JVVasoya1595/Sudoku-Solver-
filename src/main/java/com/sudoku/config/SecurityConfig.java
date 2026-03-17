@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig {
@@ -14,8 +15,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/login", "/signup", "/h2-console/**").permitAll()
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/css/**"),
+                                new AntPathRequestMatcher("/js/**"),
+                                new AntPathRequestMatcher("/favicon.ico"),
+                                new AntPathRequestMatcher("/login"),
+                                new AntPathRequestMatcher("/signup"),
+                                new AntPathRequestMatcher("/h2-console/**")
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -28,7 +35,7 @@ public class SecurityConfig {
                         .permitAll()
                 );
 
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
+        http.csrf(csrf -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")));
         http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
